@@ -1,7 +1,7 @@
-imagePath = fullfile('/home', 'driverless', 'Documents', 'MATLAB', 'Examples', 'R2020b', 'lidar', 'LidarCameraCalibrationExample', 'images_test');
-ptCloudPath = fullfile('/home', 'driverless', 'Documents', 'MATLAB', 'Examples', 'R2020b', 'lidar', 'LidarCameraCalibrationExample', 'point_cloud_test');
+imagePath = fullfile('/Users','basemprince','Downloads','LidarCalibration', 'images_test');
+ptCloudPath = fullfile('/Users','basemprince','Downloads','LidarCalibration', 'point_cloud_test');
 %cameraParamsPath = fullfile(imagePath, 'camera_params.mat');
-
+load('cameraParams1.mat');
 %intrinsic = load(cameraParamsPath); % Load camera intrinsics
 imds = imageDatastore(imagePath); % Load images using imageDatastore
 pcds = fileDatastore(ptCloudPath, 'ReadFcn', @pcread); % Load point cloud files
