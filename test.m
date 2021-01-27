@@ -20,11 +20,21 @@ imageFileNames = imageFileNames(dataUsed); % Remove image files that are not use
 %helperShowImageCorners(imageCorners3d, imageFileNames, cameraParams);
 
 % Extract ROI from the detected image corners
-roi = helperComputeROI(imageCorners3d, 5);
+roi = helperComputeROI(imageCorners3d, 2);
 
 % Filter point cloud files corresponding to the detected images
 ptCloudFileNames = ptCloudFileNames(dataUsed);
-[lidarCheckerboardPlanes, framesUsed, indices] = detectRectangularPlanePoints(ptCloudFileNames, checkerboardDimension, 'ROI', roi,'MinDistance',0.1,'DimensionTolerance' ,0.2);
+
+ptCloud = pcread(ptCloudFileNames{1});
+for i=2:numel(ptCloudFileNames)
+    ptCloud(i) = pcread(ptCloudFileNames{i});
+end
+for i = 1:length(ptCloud)
+%ptCloud(i) = pcmedian(ptCloud(i));
+%ptCloud(i) = pcdenoise(ptCloud(i));%, 'Threshold' , 0.01,'NumNeighbors',1);
+end
+
+[lidarCheckerboardPlanes, framesUsed, indices] = detectRectangularPlanePoints_mod(ptCloud, checkerboardDimension, 'ROI', roi,'MinDistance',0.1,'DimensionTolerance' ,0.2);
 
 % Remove ptCloud files that are not used
 ptCloudFileNames = ptCloudFileNames(framesUsed);
@@ -33,7 +43,7 @@ imageFileNames = imageFileNames(framesUsed);
 % Remove 3D corners from images
 imageCorners3d = imageCorners3d(:, :, framesUsed);
 
-%helperShowLidarCorners(ptCloudFileNames, indices);
+helperShowLidarCorners(ptCloudFileNames, indices);
 
 [tform, errors] = estimateLidarCameraTransform(lidarCheckerboardPlanes, ...
     imageCorners3d, 'CameraIntrinsic', cameraParams.Intrinsics);
