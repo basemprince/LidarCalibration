@@ -1,15 +1,16 @@
-ptCloud = pcread('point_cloud_test/02.pcd');
+ptCloud = pcread('point_cloud/01.pcd');
 ptCloud = pcmedian(ptCloud);
 ptCloud = removeInvalidPoints(ptCloud);
-ptCloud = pcdenoise(ptCloud, 'Threshold' , 0.01,'NumNeighbors',1);
+ptCloud = pcdenoise(ptCloud, 'Threshold' , 0.0001,'NumNeighbors',1);
 location = ptCloud.Location;
-roi2 = [0, 2, -1, 1, -0.1, 0.5];
 
-%points = findPointsInROI(ptCloud,roi2);
-%ptCloud = pointCloud(points);
+roi2 = [-1 2 -1.5 2 -1 3];
+indicies1 = findPointsInROI(ptCloud,roi2);
+ptCloud = select(ptCloud,indicies1);
+ptCloud = pcdownsample(ptCloud,'gridAverage',0.02);
 pcshow(ptCloud)
-title('Input Point Cloud')
-%ptCloud = pcdownsample(ptCloud,'gridAverage',0.005);
+
+
 
 % xlim([-0 4]);
 % ylim([-2 5]);
@@ -56,14 +57,14 @@ for i = 1:numClusters
                     lidar.internal.calibration.fitRectangle3D(segmentedPlane, 'O', 'YPR', 'Iterations', 30);
                 dimensions = rectModel.Dimensions;
                 dimensions = sort(dimensions,"descend");
-%                 disp(['cluster ', num2str(i) , ' is ', num2str(dimensions*1000)]);
+                 disp(['cluster ', num2str(i) , ' is ', num2str(dimensions*1000)]);
                 length = dimensions(1);
                 width = dimensions(2);
-%                 hRect = figure;
-%                 panel = uipanel('Parent',hRect,'BackgroundColor',[0 0 0]);
-%                 ax = axes('Parent',panel,'Color',[0 0 0]); 
-%                 pcshowpair(ptCloud,segmentedPlane)
-%                 title(i);
+                 hRect = figure;
+                 panel = uipanel('Parent',hRect,'BackgroundColor',[0 0 0]);
+                 ax = axes('Parent',panel,'Color',[0 0 0]); 
+                 pcshowpair(ptCloud,segmentedPlane)
+                 title(i);
                 
                 if length < maxLengthToCheck && length > minLengthToCheck && ...
                         width > minWidthToCheck && width < maxWidthToCheck

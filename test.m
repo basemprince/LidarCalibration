@@ -30,11 +30,13 @@ for i=2:numel(ptCloudFileNames)
     ptCloud(i) = pcread(ptCloudFileNames{i});
 end
 for i = 1:length(ptCloud)
-%ptCloud(i) = pcmedian(ptCloud(i));
-%ptCloud(i) = pcdenoise(ptCloud(i));%, 'Threshold' , 0.01,'NumNeighbors',1);
+ptCloud(i) = pcmedian(ptCloud(i));
+% ptCloud(i) = pcdenoise(ptCloud(i), 'Threshold' , 0.0001,'NumNeighbors',1);
+% ptCloud(i) = pcdownsample(ptCloud(i),'gridAverage',0.001);
+% ptCloud(i) = pcdenoise(ptCloud(i));%, 'Threshold' , 0.01,'NumNeighbors',1);
 end
 
-[lidarCheckerboardPlanes, framesUsed, indices] = detectRectangularPlanePoints_mod(ptCloud, checkerboardDimension, 'ROI', roi,'MinDistance',0.1,'DimensionTolerance' ,0.2);
+[lidarCheckerboardPlanes, framesUsed, indices] = detectRectangularPlanePoints_mod(ptCloud, checkerboardDimension, 'ROI', roi,'MinDistance',0.1,'DimensionTolerance' ,0.1);
 
 % Remove ptCloud files that are not used
 ptCloudFileNames = ptCloudFileNames(framesUsed);

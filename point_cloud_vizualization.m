@@ -1,17 +1,17 @@
-ptCloud = pcread('point_cloud_test/09.pcd');
+ptCloud = pcread('point_cloud/01.pcd');
 ptCloud = pcmedian(ptCloud);
 ptCloud = removeInvalidPoints(ptCloud);
 ptCloud = pcdenoise(ptCloud, 'Threshold' , 0.01,'NumNeighbors',1);
-%ptCloud = pcdownsample(ptCloud,'gridAverage',0.005);
+ptCloud = pcdownsample(ptCloud,'gridAverage',0.005);
 pcshow(ptCloud)
 title('Input Point Cloud')
 % xlim([-0 4]);
 % ylim([-2 5]);
 % zlim([-1 5]);
 
-xlim([0 2]);
-ylim([-1 1]);
-zlim([-0.1 0.5]);
+% xlim([0 2]);
+% ylim([-1 1]);
+% zlim([-0.1 0.5]);
 
 minDistance = 0.1;
 
@@ -20,13 +20,13 @@ minDistance = 0.1;
 squareSize = 67; % Square size of the checkerboard
 boardSize = [402 470];
 
-roi2 = [0, 2, -1, 1, -0.1, 0.5];
+%roi2 = [0, 2, -1, 1, -0.1, 0.5];
 
 [labels, numClusters] = pcsegdist(ptCloud , minDistance);
 
 
 
-[lidarCheckerboardPlane, ptCloudUsed] = detectRectangularPlanePoints(ptCloud,boardSize,'MinDistance',0.1,'DimensionTolerance' ,0.2);
+[lidarCheckerboardPlane, ptCloudUsed] = detectRectangularPlanePoints_mod(ptCloud,boardSize,'MinDistance',0.1,'DimensionTolerance' ,0.2);
 %lidar.internal.calibration.extractRectangle
 
 planeDimension = boardSize/1000;
@@ -47,7 +47,7 @@ pcshow(lidarCheckerboardPlane)
 title('Rectangular Plane Points')
 % %ptCloud2 = pointCloud(brushedData)
 % figure
-% pcshowpair(ptCloud,lidarCheckerboardPlane)
-% title('Detected Rectangular Plane')
+pcshowpair(ptCloud,lidarCheckerboardPlane)
+title('Detected Rectangular Plane')
 % xlim([-5 10])
 % ylim([-5 10])
