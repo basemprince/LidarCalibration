@@ -1,7 +1,7 @@
 imagePath = fullfile('/Users','basemprince','Downloads','LidarCalibration', 'images');
 ptCloudPath = fullfile('/Users','basemprince','Downloads','LidarCalibration', 'point_cloud');
 %cameraParamsPath = fullfile(imagePath, 'camera_params.mat');
-load('cameraParams1.mat');
+load('cameraParams2.mat');
 %intrinsic = load(cameraParamsPath); % Load camera intrinsics
 imds = imageDatastore(imagePath); % Load images using imageDatastore
 pcds = fileDatastore(ptCloudPath, 'ReadFcn', @pcread); % Load point cloud files
@@ -24,7 +24,6 @@ roi = helperComputeROI(imageCorners3d, 2);
 
 % Filter point cloud files corresponding to the detected images
 ptCloudFileNames = ptCloudFileNames(dataUsed);
-
 ptCloud = pcread(ptCloudFileNames{1});
 for i=2:numel(ptCloudFileNames)
     ptCloud(i) = pcread(ptCloudFileNames{i});
